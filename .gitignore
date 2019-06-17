@@ -22,7 +22,7 @@
 # Mac crap
 .DS_Store
 
-.idea/
+.idea
 *.iml
 velocity.log*
 

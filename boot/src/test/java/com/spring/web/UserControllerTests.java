@@ -1,6 +1,7 @@
 package com.spring.web;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,6 +33,7 @@ public class UserControllerTests {
     }
 
     @Test
+    @Ignore
     public void testUserController() throws Exception {
         // 测试UserController
         RequestBuilder request = null;

@@ -1,4 +1,4 @@
-package com.spring;
+package com.iamyanbing;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

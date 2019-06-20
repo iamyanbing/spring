@@ -1,6 +1,6 @@
-package com.spring.web;
+package com.iamyanbing.web;
 
-import com.spring.domain.entity.User;
+import com.iamyanbing.domain.entity.User;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;

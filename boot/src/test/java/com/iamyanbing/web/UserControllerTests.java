@@ -1,4 +1,4 @@
-package com.spring.web;
+package com.iamyanbing.web;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -29,7 +29,7 @@ public class UserControllerTests {
 
     @Before
     public void setUp() throws Exception {
-        mvc = MockMvcBuilders.standaloneSetup(new UserController()).build();
+        mvc = MockMvcBuilders.standaloneSetup(new com.iamyanbing.web.UserController()).build();
     }
 
     @Test

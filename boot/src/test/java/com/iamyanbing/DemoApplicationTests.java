@@ -1,4 +1,4 @@
-package com.spring;
+package com.iamyanbing;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

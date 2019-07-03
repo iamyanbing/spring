@@ -1,4 +1,4 @@
-package com.spring.domain.entity;
+package com.iamyanbing.domain.entity;
 
 import lombok.Data;
 import lombok.ToString;

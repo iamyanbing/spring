@@ -7,16 +7,29 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 
 /**
+ * @RestController：提供实现了REST API，可以服务JSON,XML或者其他。这里是以String的形式渲染出结果。
+ * Spring4之后加入的注解，原来在@Controller中返回json需要@ResponseBody来配合，如果直接用@RestController替代@Controller就不需要再配置@ResponseBody，默认返回json格式
  * @Auther: yanbing
  * @Date: 2019/2/22 18:08
  */
-//@RestController：提供实现了REST API，可以服务JSON,XML或者其他。这里是以String的形式渲染出结果。
 @RestController
 public class HelloController {
     private static final Logger LOGGER = LoggerFactory.getLogger(HelloController.class);
 
-    //提供路由信息，"/hello"路径的HTTP Request都会被映射到sayHello方法进行处理
-    //value = "name":指定参数名称。源码中name的别名为value，value的别名为name ，所以两者等同
+
+    /**
+     * <pre>
+     * 注解@RequestMapping：配置url映射。现在更多的也会直接用以Http Method直接关联的映射注解来定义，比如：GetMapping、PostMapping、DeleteMapping、PutMapping等
+     *
+     * 提供路由信息，"/hello"路径的HTTP Request都会被映射到sayHello方法进行处理
+     *
+     * value = "name":指定参数名称。源码中name的别名为value，value的别名为name ，所以两者等同
+     * </pre>
+     *
+     * @param age
+     * @param name
+     * @return
+     */
     @RequestMapping(value = "/{age}/hello", method = RequestMethod.GET)
     public String sayHello(@PathVariable("age") String age, @RequestParam(value = "name", required = false, defaultValue = "World") String name) {
         LOGGER.info("sayHello, date :" + new Date());

@@ -25,7 +25,7 @@ public class UploadController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UploadController.class);
 
     /**
-     * 通过MultipartFile接受文件
+     * 通过MultipartFile接收文件
      *
      * @param excelFile
      * @param name

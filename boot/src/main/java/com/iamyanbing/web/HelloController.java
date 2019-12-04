@@ -13,6 +13,7 @@ import java.util.Date;
  * @Date: 2019/2/22 18:08
  */
 @RestController
+@RequestMapping("/hello")
 public class HelloController {
     private static final Logger LOGGER = LoggerFactory.getLogger(HelloController.class);
 
@@ -30,10 +31,22 @@ public class HelloController {
      * @param name
      * @return
      */
-    @RequestMapping(value = "/{age}/hello", method = RequestMethod.GET)
+    @RequestMapping(value = "/{age}", method = RequestMethod.GET)
     public String sayHello(@PathVariable("age") String age, @RequestParam(value = "name", required = false, defaultValue = "World") String name) {
         LOGGER.info("sayHello, date :" + new Date());
         return "Hello " + name + "," + age;
+    }
+
+    @RequestMapping(value = "/yanbing", method = RequestMethod.GET)
+    public String sayHelloYanBing() {
+        LOGGER.info("Hello, yanbing, date :" + new Date());
+        return "Hello yanbing";
+    }
+
+    @RequestMapping(value = "/excludePathPatterns", method = RequestMethod.GET)
+    public String excludePathPatterns() {
+        LOGGER.info("excludePathPatterns, date :" + new Date());
+        return "excludePathPatterns";
     }
 
     //提供路由信息，"/hello"路径的HTTP Request都会被映射到sayHello方法进行处理

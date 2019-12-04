@@ -3,14 +3,12 @@ package com.iamyanbing.domain.entity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.ToString;
 
 /**
  * @Auther: yanbing
  * @Date: 2019/2/23 14:03
  */
 @Data
-@ToString
 @ApiModel(description = "用户实体")
 public class User {
     @ApiModelProperty("用户编号")

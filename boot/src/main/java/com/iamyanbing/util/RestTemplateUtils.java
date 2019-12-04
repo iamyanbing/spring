@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -28,7 +29,21 @@ public class RestTemplateUtils {
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
 
+        //直接转化为需要的对象（这里为String）
         String responses = restTemplate.postForObject(url, request, String.class);
+
+    }
+
+    public void postForEntity() {
+        String requestData = "";//requestData为json、xml
+
+        HttpEntity<String> entity = new HttpEntity<>(requestData);
+
+        //结果转化为ResponseEntity<String>，ResponseEntity除包含响应体之外还有状态行、响应头
+        //setErrorHandler作用是当响应状态码不为200时不抛出异常，通过ResponseEntity对象中响应状态码自定义处理
+        restTemplate.setErrorHandler(new CustomErrorHandler());
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, entity, String.class);
+        HttpHeaders httpHeaders = responseEntity.getHeaders();
     }
 
 }

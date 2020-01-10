@@ -22,6 +22,36 @@
         <include refid="Base_Column_List"/>
         from t_project
         where id = #{id,jdbcType=INTEGER}
+        <if test="types!=null">
+            and a.type in
+            <foreach collection="types" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+    <select id="selectByTypes" parameterType="java.util.List" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_project
+        where id = #{id,jdbcType=INTEGER}
+        <if test="types!=null">
+            and a.type in
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+    <select id="selectByTypesParam" parameterType="java.util.List" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_project
+        where id = #{id,jdbcType=INTEGER}
+        <if test="types!=null">
+            and a.type in
+            <foreach collection="types" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from t_project
@@ -168,6 +198,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
+    <!-- 通过这种方式，连接的时候需要设置  allowMultiQueries=true -->
     <update id="updateBatch">
         <foreach collection="list" item="record" index="index" open="" close="" separator=";">
             update t_project

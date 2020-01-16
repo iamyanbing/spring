@@ -1,7 +1,5 @@
-package com.createivearts.adminmanager.config;
+package com.iamyanbing.datasource;
 
-import com.createivearts.adminmanager.datasource.MyRoutingDataSource;
-import com.createivearts.adminmanager.enums.DBTypeEnum;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;

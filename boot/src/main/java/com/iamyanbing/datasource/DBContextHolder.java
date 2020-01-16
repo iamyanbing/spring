@@ -1,6 +1,4 @@
-package com.createivearts.adminmanager.datasource;
-
-import com.createivearts.adminmanager.enums.DBTypeEnum;
+package com.iamyanbing.datasource;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

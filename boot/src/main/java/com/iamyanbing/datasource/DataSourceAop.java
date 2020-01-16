@@ -1,4 +1,4 @@
-package com.createivearts.adminmanager.datasource;
+package com.iamyanbing.datasource;
 
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -12,41 +12,41 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class DataSourceAop {
-/*    @Pointcut("!@annotation(com.createivearts.adminmanager.datasource.Master) " +
-            "&& (execution(* com.createivearts.adminmanager.dao.crm.*.select*(..)) " +
-            "|| execution(* com.createivearts.adminmanager.dao.crm.*.query*(..))" +
-            "|| execution(* com.createivearts.adminmanager.dao.crm.*.count*(..))" +
-            "|| execution(* com.createivearts.adminmanager.dao.crm.*.group*(..))" +
-            "|| execution(* com.createivearts.adminmanager.dao.crm.*.get*(..)))")*/
-    @Pointcut("!@annotation(com.createivearts.adminmanager.datasource.Master) " +
-            "&& (execution(* com.createivearts.adminmanager.dao.crm.CallTaskDao.selectAllByParamForJob(..)) " +
-            "|| execution(* com.createivearts.adminmanager.dao.crm.CallTaskDao.countByParamForJob(..)))")
+/*    @Pointcut("!@annotation(com.iamyanbing.datasource.Master) " +
+            "&& (execution(* com.createivearts.adminmanager.featuretwo.*.select*(..)) " +
+            "|| execution(* com.createivearts.adminmanager.featuretwo.*.query*(..))" +
+            "|| execution(* com.createivearts.adminmanager.featuretwo.*.count*(..))" +
+            "|| execution(* com.createivearts.adminmanager.featuretwo.*.group*(..))" +
+            "|| execution(* com.createivearts.adminmanager.featuretwo.*.get*(..)))")*/
+    @Pointcut("!@annotation(com.iamyanbing.datasource.Master) " +
+            "&& (execution(* com.iamyanbing.datasource.featuretwo.*.select*(..)) " +
+            "|| execution(* com.iamyanbing.datasource.featuretwo.*.get*(..)))")
     public void readPointcut() {
 
     }
 
-    @Pointcut("@annotation(com.createivearts.adminmanager.datasource.Master) " +
-            "|| execution(* com.createivearts.adminmanager.dao.crm.*.insert*(..)) " +
-            "|| execution(* com.createivearts.adminmanager.dao.crm.*.add*(..)) " +
-            "|| execution(* com.createivearts.adminmanager.dao.crm.*.update*(..)) " +
-            "|| execution(* com.createivearts.adminmanager.dao.crm.*.edit*(..)) " +
-            "|| execution(* com.createivearts.adminmanager.dao.crm.*.batch*(..)) " +
-            "|| execution(* com.createivearts.adminmanager.dao.crm.*.delete*(..)) " +
-            "|| execution(* com.createivearts.adminmanager.dao.crm.*.remove*(..))")
+    @Pointcut("@annotation(com.iamyanbing.datasource.Master) " +
+            "|| execution(* com.iamyanbing.datasource.featureone.*.insert*(..)) " +
+            "|| execution(* com.iamyanbing.datasource.featureone.*.add*(..)) " +
+            "|| execution(* com.iamyanbing.datasource.featureone.*.update*(..)) " +
+            "|| execution(* com.iamyanbing.datasource.featureone.*.edit*(..)) " +
+            "|| execution(* com.iamyanbing.datasource.featureone.*.batch*(..)) " +
+            "|| execution(* com.iamyanbing.datasource.featureone.*.delete*(..)) " +
+            "|| execution(* com.iamyanbing.datasource.featureone.*.remove*(..))")
     public void writePointcut() {
 
     }
 
-    @Pointcut("!@annotation(com.createivearts.adminmanager.datasource.Master) " +
-            "&& (execution(* com.createivearts.adminmanager.dao.dwduser.*.insert*(..)) " +
-            "|| execution(* com.createivearts.adminmanager.dao.dwduser.*.delete*(..)) " +
-            "|| execution(* com.createivearts.adminmanager.dao.dwduser.*.select*(..)) " +
-            "|| execution(* com.createivearts.adminmanager.dao.dwduser.*.update*(..)))")
-    public void dwdUserPointcut() {
+    @Pointcut("!@annotation(com.iamyanbing.datasource.Master) " +
+            "&& (execution(* com.iamyanbing.datasource.featurethree.*.insert*(..)) " +
+            "|| execution(* com.iamyanbing.datasource.featurethree.*.delete*(..)) " +
+            "|| execution(* com.iamyanbing.datasource.featurethree.*.select*(..)) " +
+            "|| execution(* com.iamyanbing.datasource.featurethree.*.update*(..)))")
+    public void featurethreePointcut() {
 
     }
 
-    @Before("dwdUserPointcut()")
+    @Before("featurethreePointcut()")
     public void dwdUser() {
         DBContextHolder.dwdUser();
     }

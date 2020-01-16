@@ -1,4 +1,4 @@
-package com.createivearts.adminmanager.datasource;
+package com.iamyanbing.datasource;
 
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 

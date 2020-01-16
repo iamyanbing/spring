@@ -1,4 +1,4 @@
-package com.createivearts.adminmanager.config;
+package com.iamyanbing.datasource;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;

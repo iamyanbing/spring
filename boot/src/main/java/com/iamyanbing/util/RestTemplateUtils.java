@@ -22,6 +22,8 @@ public class RestTemplateUtils {
     public void postForObject() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        //Cookie在请求头
+        headers.set("Cookie", "JSESSIONID=9114409C5EAF785B8CE6024CEA8864A5");
 
         // 封装参数，千万不要替换为Map与HashMap，否则参数无法传递
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();

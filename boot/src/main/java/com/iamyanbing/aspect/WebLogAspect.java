@@ -81,6 +81,8 @@ public class WebLogAspect {
 
         // 记录下请求内容
         LOGGER.info("URL : " + request.getRequestURL().toString());
+        LOGGER.info("URI : " + request.getRequestURI());
+        LOGGER.info("QueryString : " + request.getQueryString());//获取请求get地址后面带的参数信息
         LOGGER.info("HTTP_METHOD : " + request.getMethod());
         LOGGER.info("IP : " + request.getRemoteAddr());
         LOGGER.info("CLASS_METHOD : " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());

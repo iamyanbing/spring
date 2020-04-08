@@ -18,6 +18,7 @@ public interface ProjectMapper {
 
     /**
      * xml中只能用list，不能用types
+     *
      * @param types
      * @return
      */
@@ -25,14 +26,23 @@ public interface ProjectMapper {
 
     /**
      * xml中可以用types
+     *
      * @param types
      * @return
      */
     List<Project> selectByTypesParam(@Param("types") List<String> types);
 
+    /**
+     * xml中可以用types
+     *
+     * @param types
+     * @return
+     */
+    List<Project> selectByTypesAndNameParam(@Param("types") List<String> types, @Param("name") String name);
+
     int updateByPrimaryKeySelective(Project record);
 
     int updateByPrimaryKey(Project record);
 
-    int updateBatch(Project record);
+    int updateBatch(List<Project> record);
 }

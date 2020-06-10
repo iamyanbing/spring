@@ -4,6 +4,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -17,10 +19,11 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @WebAppConfiguration
 public class RestTemplateUtilsTest {
 
-    @Test
-    @Ignore
-    public void testUserController() throws Exception {
 
+    @Test
+//    @Ignore
+    public void testUserController() throws Exception {
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("");
     }
 
 }

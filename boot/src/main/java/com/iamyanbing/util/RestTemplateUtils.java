@@ -1,5 +1,8 @@
 package com.iamyanbing.util;
 
+import com.google.gson.Gson;
+import com.iamyanbing.domain.entity.BaseRes;
+import com.iamyanbing.domain.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -8,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author huangyanbing
@@ -18,6 +24,17 @@ public class RestTemplateUtils {
     private final static String url = "www.baidu.com";
     @Autowired
     private RestTemplate restTemplate;
+
+    public void getForEntity() {
+        String urlAll = url + "/login?account={account}&password={password}";
+        Map<String, String> params = new HashMap<>();
+        params.put("account", "huang");
+        params.put("password", "123456");
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(urlAll, String.class, params);
+        BaseRes getTokenRes = new Gson().fromJson(responseEntity.getBody(), BaseRes.class);
+    }
+
+
 
     public void postForObject() {
         HttpHeaders headers = new HttpHeaders();

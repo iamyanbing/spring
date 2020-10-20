@@ -2,6 +2,8 @@ package com.iamyanbing.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -13,6 +15,7 @@ import java.util.Date;
  * @Date: 2019/2/22 18:08
  */
 @RestController
+@Repository
 @RequestMapping("/hello")
 public class HelloController {
     private static final Logger LOGGER = LoggerFactory.getLogger(HelloController.class);

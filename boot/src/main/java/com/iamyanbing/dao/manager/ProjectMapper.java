@@ -45,4 +45,12 @@ public interface ProjectMapper {
     int updateByPrimaryKey(Project record);
 
     int updateBatch(List<Project> record);
+
+
+    /**
+     * 指定分页规则和排序规则
+     * @param record
+     * @return
+     */
+    List<Project> selectByEntity(Project record);
 }

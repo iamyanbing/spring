@@ -62,7 +62,7 @@
         <if test="types!=null">
             and type in
             <foreach collection="types" index="index" item="item" open="(" separator="," close=")">
-                #{item}
+                #{mite}
             </foreach>
         </if>
     </select>
@@ -225,4 +225,33 @@
             AND name = #{record.name,jdbcType=VARCHAR,typeHandler=com.iamyanbing.dao.manager.handler.DataTypeHandler}
         </foreach>
     </update>
+
+    <select id="selectByEntity" parameterType="com.iamyanbing.dao.manager.entity.Project" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_project
+        where id = #{id,jdbcType=INTEGER}
+        <if test="types!=null">
+            and type in
+            <foreach collection="types" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        order by
+        <if test="sortField!=null and sortField!=''">
+            <choose>
+                <when test="asc">
+                    ${sortField} asc,
+                </when>
+                <otherwise>
+                    ${sortField} desc,
+                </otherwise>
+            </choose>
+        </if>
+        created_time desc
+        <if test="pageFlag">
+            limit #{pageStart}, #{pageSize}
+        </if>
+    </select>
 </mapper>

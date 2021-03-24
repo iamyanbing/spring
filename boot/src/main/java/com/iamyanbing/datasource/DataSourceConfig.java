@@ -37,7 +37,7 @@ public class DataSourceConfig {
     }
 
     /**
-     * 配置路由数据源，前2个数据源都是为了生成第这个路由数据源，而且后续我们只用这个路由数据源。
+     * 配置路由数据源，前3个数据源都是为了生成这个路由数据源，而且后续我们只用这个路由数据源。
      *
      * @param masterDataSource
      * @param slaveDataSource

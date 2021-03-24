@@ -35,7 +35,7 @@
         <include refid="Base_Column_List"/>
         from t_project
         where id = #{id,jdbcType=INTEGER}
-        <if test="types!=null">
+        <if test="list!=null">
             and type in
             <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
                 #{item}

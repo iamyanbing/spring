@@ -1,6 +1,8 @@
 package com.iamyanbing.web;
 
+import com.google.gson.Gson;
 import com.iamyanbing.domain.entity.User;
+import com.iamyanbing.filter.UserContext;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -31,6 +33,13 @@ import java.util.*;
 public class UserController {
     // 创建线程安全的Map
     static Map<Long, User> users = Collections.synchronizedMap(new HashMap<Long, User>());
+
+    @ApiOperation(value = "获取filter用户列表", notes = "")
+    @GetMapping(value = "/getFilterUser")
+    public String getFilterUser() {
+        User user = UserContext.getUser();
+        return new Gson().toJson(user);
+    }
 
     @ApiOperation(value = "获取用户列表", notes = "")
     @GetMapping(value = "/")

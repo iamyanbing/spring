@@ -1,9 +1,7 @@
 package com.iamyanbing.ioc;
 
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 

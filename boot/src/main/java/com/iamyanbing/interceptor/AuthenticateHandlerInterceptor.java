@@ -1,11 +1,9 @@
 package com.iamyanbing.interceptor;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -17,9 +15,6 @@ import java.util.Map;
  * @date 2019-11-05 19:04
  */
 public class AuthenticateHandlerInterceptor extends HandlerInterceptorAdapter {
-
-    @Autowired
-    ObjectMapper objectMapper;
 
     AntPathMatcher antPathMatcher = new AntPathMatcher();
 
@@ -39,7 +34,7 @@ public class AuthenticateHandlerInterceptor extends HandlerInterceptorAdapter {
         }
 
         //permissions用来配置登陆之后就有的权限
-        String[] permissions = {"/hello/yanbing", "/hello/**","/HttpServlet/**"};
+        String[] permissions = {"/restTemplate/**","/hello/yanbing", "/hello/**","/HttpServlet/**","/users/getFilterUser","/swagger-ui.html"};
 
         //匹配排除 全路径 情况
         for (String permission : permissions) {
@@ -71,7 +66,7 @@ public class AuthenticateHandlerInterceptor extends HandlerInterceptorAdapter {
         Map<String, Object> data = new HashMap<>();
         data.put("code", 403);  // 指定401表示未登录（目前前端可能无法处理HTTP自身的401状态码）
         response.setContentType("application/json");
-        response.getWriter().write(objectMapper.writeValueAsString(data));
+        response.getWriter().write(new Gson().toJson(data));
         response.getWriter().flush();
     }
 }

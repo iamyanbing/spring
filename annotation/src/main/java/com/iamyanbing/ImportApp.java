@@ -10,11 +10,11 @@ public class ImportApp {
 
         ApplicationContext applicationContext =
                 new AnnotationConfigApplicationContext(ImportConfig.class);
-
-        String[] beanDefinitionNames = applicationContext.getBeanDefinitionNames();
-        for (String beanName : beanDefinitionNames) {
-            System.out.println("beanName: " + beanName);
-        }
+//
+//        String[] beanDefinitionNames = applicationContext.getBeanDefinitionNames();
+//        for (String beanName : beanDefinitionNames) {
+//            System.out.println("beanName: " + beanName);
+//        }
 
         User user = (User) applicationContext.getBean("com.iamyanbing.annotation.imports.entry.User");
         System.out.println(user.getName());

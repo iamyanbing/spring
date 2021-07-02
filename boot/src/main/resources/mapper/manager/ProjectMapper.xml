@@ -23,7 +23,7 @@
         <include refid="Base_Column_List"/>
         from t_project
         where id = #{id,jdbcType=INTEGER}
-        <if test="types!=null">
+        <if test="types!=null and types.size() != 0">
             and type in
             <foreach collection="types" index="index" item="item" open="(" separator="," close=")">
                 #{item}
@@ -35,7 +35,7 @@
         <include refid="Base_Column_List"/>
         from t_project
         where id = #{id,jdbcType=INTEGER}
-        <if test="list!=null">
+        <if test="list!=null and types.size() != 0">
             and type in
             <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
                 #{item}
@@ -47,7 +47,7 @@
         <include refid="Base_Column_List"/>
         from t_project
         where
-        <if test="types!=null">
+        <if test="types!=null and types.size() != 0">
             and type in
             <foreach collection="types" index="index" item="item" open="(" separator="," close=")">
                 #{item}
@@ -59,10 +59,10 @@
         <include refid="Base_Column_List"/>
         from t_project
         where name = #{name,jdbcType=VARCHAR}
-        <if test="types!=null">
+        <if test="types != null and types.size() != 0">
             and type in
             <foreach collection="types" index="index" item="item" open="(" separator="," close=")">
-                #{mite}
+                #{item}
             </foreach>
         </if>
     </select>

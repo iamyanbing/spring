@@ -34,7 +34,8 @@ public class AuthenticateHandlerInterceptor extends HandlerInterceptorAdapter {
         }
 
         //permissions用来配置登陆之后就有的权限
-        String[] permissions = {"/restTemplate/**","/hello/yanbing", "/hello/**","/HttpServlet/**","/users/getFilterUser","/swagger-ui.html"};
+        String[] permissions = {"/restTemplate/**","/hello/yanbing", "/hello/**","/HttpServlet/**","/users/getFilterUser",
+                "/swagger-ui.html", "/snowflake/**"};
 
         //匹配排除 全路径 情况
         for (String permission : permissions) {

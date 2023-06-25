@@ -1,5 +1,6 @@
 package com.iamyanbing.interceptor;
 
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -31,8 +32,23 @@ public class LoginInterceptor implements HandlerInterceptor {
         LOGGER.info("request.getRequestURI() : "+ request.getRequestURI());
         LOGGER.info("request.getRequestURL() : "+ request.getRequestURL());
         LOGGER.info("request.getServerName() : "+ request.getServerName());
-        LOGGER.info("request.getServletContext() : "+ request.getServletContext());
+        LOGGER.info("request.getServletContext().getRealPath(\"/\") : "+ request.getServletContext().getRealPath("/"));
         LOGGER.info(url);
+        LOGGER.info("request.getServletPath() : "+ request.getServletPath());
+        LOGGER.info("request.getAuthType() : "+ request.getAuthType());
+        LOGGER.info("request.getContextPath() : "+ request.getContextPath());
+        LOGGER.info("request.getMethod() : "+ request.getMethod());
+        LOGGER.info("request.getPathInfo() : "+ request.getPathInfo());
+        LOGGER.info("request.getPathTranslated() : "+ request.getPathTranslated());
+        LOGGER.info("request.getLocalAddr() : "+ request.getLocalAddr());
+        LOGGER.info("request.getLocalName() : "+ request.getLocalName());
+        LOGGER.info("request.getRemoteAddr() : "+ request.getRemoteAddr());
+        LOGGER.info("request.getRemoteUser() : "+ request.getRemoteUser());
+        LOGGER.info("request.getRemoteHost() : "+ request.getRemoteHost());
+        LOGGER.info("request.getRemotePort() : "+ request.getRemotePort());
+        LOGGER.info("request.getLocalPort() : "+ request.getLocalPort());
+        LOGGER.info("request.getServerPort() : "+ request.getServerPort());
+        LOGGER.info("request.getProtocol() : "+ request.getProtocol());
         return true;
     }
 

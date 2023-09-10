@@ -6,10 +6,7 @@ import com.iamyanbing.domain.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -19,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,6 +58,10 @@ public class RestTemplateUtils {
         String responseDTO = restTemplate.postForObject(url, entity, String.class);
     }
 
+    /**
+     * get
+     * 无法设置请求头
+     */
     public void getForEntity() {
         String urlAll = url + "/login?account={account}&password={password}";
         Map<String, String> params = new HashMap<>();
@@ -68,6 +70,34 @@ public class RestTemplateUtils {
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(urlAll, String.class, params);
         BaseRes getTokenRes = new Gson().fromJson(responseEntity.getBody(), BaseRes.class);
     }
+
+    /**
+     * get
+     * 可以设置请求头
+     */
+    public void getForEntityHeader() {
+        String urlAll = url + "/login?account={account}&password={password}";
+
+        HttpHeaders headers = new HttpHeaders();
+        //Cookie在请求头
+        headers.set("Cookie", "JSESSIONID=9114409C5EAF785B8CE6024CEA8864A5");
+
+        // 封装参数，千万不要替换为Map与HashMap，否则参数无法传递
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("account", "huang");
+        params.add("password", "123456");
+
+        //封装请求头
+        HttpEntity<MultiValueMap<String, String>> formEntity = new HttpEntity<>(params, headers);
+
+        ResponseEntity<String> responseEntity = restTemplate.exchange(urlAll,
+                HttpMethod.GET, formEntity, String.class);
+//        restTemplate.exchange(urlAll,
+//                HttpMethod.GET, formEntity, String.class, "huang", "123456");
+        String dto = responseEntity.getBody();
+        BaseRes getTokenRes = new Gson().fromJson(responseEntity.getBody(), BaseRes.class);
+    }
+
 
 
     public void postForObject() {
@@ -88,9 +118,15 @@ public class RestTemplateUtils {
     }
 
     public void postForEntity() {
-        String requestData = "";//requestData为json、xml
+        //requestData为json、xml
+//        String requestData = "";
+        User requestData = new User();
+        HttpHeaders requestHeaders = new HttpHeaders();
+        // 重点是配置请求头内容类型为："application/json"
+        requestHeaders.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity<String> entity = new HttpEntity<>(requestData);
+        //会把User对象转成json字符串
+        HttpEntity<User> entity = new HttpEntity<>(requestData, requestHeaders);
 
         //结果转化为ResponseEntity<String>，ResponseEntity除包含响应体之外还有状态行、响应头
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, entity, String.class);

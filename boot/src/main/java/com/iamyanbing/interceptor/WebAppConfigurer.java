@@ -24,7 +24,9 @@ public class WebAppConfigurer implements WebMvcConfigurer {
             registration.excludePathPatterns("/login/**,/hello/excludePathPatterns".split(","));
         }
 
-        InterceptorRegistration authRegistration = registry.addInterceptor(new AuthenticateHandlerInterceptor()).addPathPatterns("/**").excludePathPatterns();
+        //order默认为0，order相同，则执行顺序为拦截器添加顺序
+        //order越小，拦截器越先执行
+        InterceptorRegistration authRegistration = registry.addInterceptor(new AuthenticateHandlerInterceptor()).addPathPatterns("/**").excludePathPatterns().order(-1);
         // 排除监控、登录、静态资源相关请求PATH
         authRegistration.excludePathPatterns(defaultExcludePathPatterns);
         // 自定义排除请求PATH,

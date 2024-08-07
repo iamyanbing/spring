@@ -18,7 +18,7 @@ import java.util.concurrent.locks.Lock;
  * 分布式锁，附带看门狗线程的实现:加锁，保持锁1秒
  * 基于jedis简单实现，工作中用Redisson
  */
-@Component
+//@Component
 public class RedisDistLockWithDog implements Lock {
 
     private final static int LOCK_TIME = 1*1000;

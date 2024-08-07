@@ -27,7 +27,7 @@ public class MQConfig {
         //现在的producer就是一个提供者，面向的其实是broker
         KafkaProducer<String, String> producer = new KafkaProducer<String, String>(p);
 
-        ProducerRecord<String, String> record = new ProducerRecord<>(topic, "item"+j,"val" + i);
+        ProducerRecord<String, String> record = new ProducerRecord<>(topic, "item","val");
         //向topic：msb-items  发送消息内容
         Future<RecordMetadata> send = producer.send(record);
         //阻塞等待发送结果

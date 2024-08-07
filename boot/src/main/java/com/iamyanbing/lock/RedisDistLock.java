@@ -16,7 +16,7 @@ import java.util.concurrent.locks.Lock;
  * 分布式锁的实现
  * 基于jedis简单实现，工作中用Redisson
  */
-@Component
+//@Component
 public class RedisDistLock implements Lock {
 
     private final static int LOCK_TIME = 5*1000;

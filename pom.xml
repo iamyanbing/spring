@@ -11,8 +11,8 @@
     <modules>
         <module>boot</module>
         <module>annotation</module>
-
+        <module>serverpush</module>
+        <module>stomp</module>
     </modules>
-
 
 </project>

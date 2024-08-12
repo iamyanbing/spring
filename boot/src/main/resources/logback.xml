@@ -42,9 +42,20 @@
             滚动时产生的文件的存放位置及文件名称 %d{yyyy-MM-dd}：按天进行日志滚动。
             %i：当文件大小超过maxFileSize时，按照i进行文件滚动
             -->
+            <!-- TimeBasedRollingPolicy 支持自动文件压缩。如果 fileNamePattern 的参数以 .gz 或 .zip 结尾，则会启用此功能。（这点不重要，不用关注） -->
             <fileNamePattern>${log.path}/sys-info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <!-- 日志文件保留最大时间滚动周期，比如当filaNamePattern中%d以为dd结尾时，则保留30天-->
-            <!-- 本element需结合cleanHistoryOnStart一起使用。原因为由于logback的时间范围计算策略问题，maxHistory可能不生效。（这是老版本的bug，新版本已经优化） -->
+            <!--
+            日志文件保留最大时间滚动周期，
+            比如当 filaNamePattern 中 %d 以为 dd 结尾时，则保留30天
+            比如当 filaNamePattern 中 %d 以为 mm 结尾时，则保留30分钟
+            比如当 filaNamePattern 中 %d 以为 MM 结尾时，则保留30个月
+            -->
+            <!--
+            本element需结合 cleanHistoryOnStart 一起使用。
+            原因为由于logback的时间范围计算策略问题，maxHistory可能不生效。（这是老版本的bug，新版本已经优化）
+
+            这个问题说的是，日志文件总大小没有超过totalSizeCap，但是时间超过了maxHistory
+            -->
             <maxHistory>30</maxHistory>
             <!--
             单个日志文件最大大小
@@ -99,10 +110,20 @@
             -->
             <!-- SizeAndTimeBasedRollingPolicy 策略下， maxFileSize 必填-->
             <maxFileSize>10KB</maxFileSize>
-            <!-- 日志文件保留最大时间滚动周期，比如当filaNamePattern中%d以为dd结尾时，则保留30天-->
-            <!-- 本element需结合cleanHistoryOnStart一起使用。原因为由于logback的时间范围计算策略问题，maxHistory可能不生效。（这是老版本的bug，新版本已经优化） -->
+            <!--
+            日志文件保留最大时间滚动周期，
+            比如当 filaNamePattern 中 %d 以为 dd 结尾时，则保留30天
+            比如当 filaNamePattern 中 %d 以为 mm 结尾时，则保留30分钟
+            比如当 filaNamePattern 中 %d 以为 MM 结尾时，则保留30个月
+            -->
+            <!--
+            本element需结合cleanHistoryOnStart一起使用。
+            原因为由于logback的时间范围计算策略问题，maxHistory可能不生效。（这是老版本的bug，新版本已经优化）
+
+            这个问题说的是，日志文件总大小没有超过totalSizeCap，但是时间超过了maxHistory
+            -->
             <maxHistory>30</maxHistory>
-            <!-- 日志文件保留的 总的最大大小-->
+            <!-- 日志文件保留的 总的最大大小。默认设置为0，表示日志大小无限制。-->
             <!-- 当日志总大小到了这个值，就会删除旧的日志 -->
             <totalSizeCap>100KB</totalSizeCap>
         </rollingPolicy>

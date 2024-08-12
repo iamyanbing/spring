@@ -145,6 +145,25 @@
             <artifactId>okhttp</artifactId>
             <version>4.10.0</version>
         </dependency>
+
+        <!-- ================================================= -->
+        <!-- easypoi: 操作Excel -->
+        <!-- ================================================= -->
+        <dependency>
+            <groupId>cn.afterturn</groupId>
+            <artifactId>easypoi-spring-boot-starter</artifactId>
+            <version>4.5.0</version>
+        </dependency>
+
+        <!-- ================================================= -->
+        <!-- logback.xml日志配置文件 中使用了<if> ...</if>条件判断标签， -->
+        <!-- logback需要依赖janino库来解析这些判断语句，而logback本身并没有依赖这个库，所以需要手动引入依赖。 -->
+        <!-- ================================================= -->
+        <dependency>
+            <groupId>org.codehaus.janino</groupId>
+            <artifactId>janino</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

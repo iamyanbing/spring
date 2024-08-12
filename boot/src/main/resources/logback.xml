@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <!-- 日志存放路径 -->
+    <!-- <Property name="log.path" value="./logs" /> -->
+    <!-- <Property name="log.path" value="\home\logs" /> -->
     <property name="LOG_DIR" value="logs" />
     <!-- 判断log.path是否是null -->
     <if condition='isNull("log.path")'>
@@ -33,13 +35,37 @@
     <!-- 系统日志输出 -->
     <appender name="file_info" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${log.path}/sys-info.log</file>
-        <!-- 循环政策：基于时间创建日志文件 -->
+        <!-- TimeBasedRollingPolicy 是基于时间滚动策略 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 日志文件名格式 -->
-            <fileNamePattern>${log.path}/sys-info.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <!-- keep 30 days' worth of history capped at 3GB total size -->
-            <maxHistory>60</maxHistory>
-            <totalSizeCap>3GB</totalSizeCap>
+            <!--
+            滚动时产生的文件的存放位置及文件名称 %d{yyyy-MM-dd}：按天进行日志滚动。
+            %i：当文件大小超过maxFileSize时，按照i进行文件滚动
+            -->
+            <fileNamePattern>${log.path}/sys-info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- 日志文件保留最大时间滚动周期，比如当filaNamePattern中%d以为dd结尾时，则保留30天-->
+            <!-- 本element需结合cleanHistoryOnStart一起使用。原因为由于logback的时间范围计算策略问题，maxHistory可能不生效。（这是老版本的bug，新版本已经优化） -->
+            <maxHistory>30</maxHistory>
+            <!--
+            单个日志文件最大大小
+            当日志文件超过maxFileSize指定的大小时，根据fileNamePattern 配置的%i进行日志文件滚动
+            TimeBasedRollingPolicy必须配置timeBasedFileNamingAndTriggeringPolicy
+
+            注意：配置了maxFileSize，在 fileNamePattern 中没有配置%i会报错
+            -->
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>3KB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- 日志文件保留的 总的最大大小-->
+            <!-- 当日志总大小到了这个值，就会删除旧的日志 -->
+            <!--
+            当只有一个日志文件时，totalSizeCap设置不起作用。
+            什么情况下会出现只有一个日志文件？
+            1：没有设置 maxFileSize。因为 TimeBasedRollingPolicy 基于时间滚动，所以maxFileSize可以不设置
+            2：fileNamePattern 值为 ${log.path}/sys-info.%d{yyyy-MM-dd}.log
+            3：并且只有当天的日志文件
+            -->
+            <totalSizeCap>30KB</totalSizeCap>
         </rollingPolicy>
         <encoder>
             <pattern>${log.pattern}</pattern>
@@ -57,13 +83,28 @@
 
     <appender name="file_error" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${log.path}/sys-error.log</file>
-        <!-- 循环政策：基于时间创建日志文件 -->
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- 日志文件名格式 -->
-            <fileNamePattern>${log.path}/sys-error.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <!-- keep 30 days' worth of history capped at 3GB total size -->
-            <maxHistory>60</maxHistory>
-            <totalSizeCap>3GB</totalSizeCap>
+        <!-- SizeAndTimeBasedRollingPolicy 是基于时间和大小的滚动策略，几乎可以涵盖所有日志滚动需求场景，也是使用最多的策略 -->
+        <!-- 该策略适用于1.1.7版本及之后的版本，之前的版本继续采用 TimeBasedRollingPolicy 加 SizeAndTimeBasedFNATP 组件实现 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 基于时间和大小的滚动策，fileNamePattern 值很重要，它决定了生成文件的名称及滚动时机,以及是否压缩 -->
+            <!-- 滚动时产生的文件的存放位置及文件名称 %d{yyyy-MM-dd}：按天进行日志滚动。 -->
+            <!-- %i：当文件大小超过maxFileSize时，按照i进行文件滚动 -->
+            <!-- 后缀以".zip"或".gz"结尾，则开启日志文件压缩。（这点不重要，不用关注） -->
+            <fileNamePattern>${log.path}/sys-error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!--
+            单个日志文件最大大小
+            当日志文件超过maxFileSize指定的大小时，根据fileNamePattern 配置的%i进行日志文件滚动
+
+            注意：配置了 maxFileSize，在 fileNamePattern 中没有配置 %i 会报错
+            -->
+            <!-- SizeAndTimeBasedRollingPolicy 策略下， maxFileSize 必填-->
+            <maxFileSize>10KB</maxFileSize>
+            <!-- 日志文件保留最大时间滚动周期，比如当filaNamePattern中%d以为dd结尾时，则保留30天-->
+            <!-- 本element需结合cleanHistoryOnStart一起使用。原因为由于logback的时间范围计算策略问题，maxHistory可能不生效。（这是老版本的bug，新版本已经优化） -->
+            <maxHistory>30</maxHistory>
+            <!-- 日志文件保留的 总的最大大小-->
+            <!-- 当日志总大小到了这个值，就会删除旧的日志 -->
+            <totalSizeCap>100KB</totalSizeCap>
         </rollingPolicy>
         <encoder>
             <pattern>${log.pattern}</pattern>
@@ -83,10 +124,8 @@
     <appender name="sys-user" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${log.path}/sys-user.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- 按天回滚 daily -->
             <fileNamePattern>${log.path}/sys-user.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <!-- keep 30 days' worth of history capped at 3GB total size -->
-            <maxHistory>60</maxHistory>
+            <maxHistory>30</maxHistory>
             <totalSizeCap>3GB</totalSizeCap>
         </rollingPolicy>
         <encoder>

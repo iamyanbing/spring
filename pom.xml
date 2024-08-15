@@ -13,6 +13,7 @@
         <module>annotation</module>
         <module>serverpush</module>
         <module>stomp</module>
+        <module>security</module>
     </modules>
 
 </project>

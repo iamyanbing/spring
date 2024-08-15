@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+</head>
+<body>
+    <h3>表单登录</h3>
+
+        <form method="post" th:action="@{/login}">
+            <input type="text" name="username" placeholder="用户名"><br>
+
+            <input type="password" name="password" placeholder="密码"><br>
+
+            <input name="imageCode" type="text" placeholder="验证码"><br>
+
+            <img th:onclick="this.src='/code/image?'+Math.random()" th:src="@{/code/image}" alt="验证码"/><br>
+            <button type="submit">登录</button>
+        </form>
+    </body>
+</html>

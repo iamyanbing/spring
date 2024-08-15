@@ -15,15 +15,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 /**
- * 设置prePostEnabled = true ： 开启 Spring Security 的方法级别安全控制
+ * 设置 prePostEnabled = true ： 开启 Spring Security 的方法级别安全控制
  * pre 表示在方法执行前进行授权校验， post 表示在方法执行后进行授权校验
  * <p>
  * SpringSecurity 5.4.x以上新用法配置
  * <p>
- * 从原方案继承 WebSecurityConfigurerAdapter 改为使用注解 @EnableWebSecurity
+ *
+ * @EnableWebSecurity 开启Spring Security的功能 代替了 implements WebSecurityConfigurerAdapter ? 有时间了解
  */
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Configuration
@@ -37,6 +41,15 @@ public class SecurityConfig {
 
     @Autowired
     private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationSuccessHandler successHandler;
+
+    @Autowired
+    private AuthenticationFailureHandler failureHandler;
+
+    @Autowired
+    private LogoutSuccessHandler logoutSuccessHandler;
 
     /**
      * BCryptPasswordEncoder注入到Spring容器
@@ -58,6 +71,20 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    /**
+     * 用于配置 HTTP 请求的安全处理
+     * <p>
+     * 注意：放行资源必须放在所有认证请求之前！
+     * <p>
+     * authorizeRequests() 和 authorizeHttpRequests() 是两种配置的方式。
+     * authorizeRequests() 是较早版本 Spring Security 使用的配置方法，
+     * authorizeHttpRequest() 是官方在未来版本中将要主要推荐的配置方式。
+     * 具体差异见官方文档： https://docs.spring.io/spring-security/reference/servlet/authorization/authorize-http-requests.html
+     *
+     * @param http
+     * @return
+     * @throws Exception
+     */
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -66,17 +93,47 @@ public class SecurityConfig {
         //允许跨域
         http.cors();
 
+        // 主要是通过访问 /login.html 查看验证码效果
         http.
                 sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)//不会去创建会话,每个请求都被视为独立的请求,STATELESS表示无状态
                 .and()
                 //定义请求授权规则
-                .authorizeRequests()
-                //对登录接口 允许匿名访问
-                .antMatchers("/user/login").anonymous()
+                .authorizeHttpRequests()
+                //对登录接口、获取验证码接口，允许匿名访问
+                .antMatchers("/user/login", "/code/image", "/captchaImage", "/login.html").permitAll()
+                // 所有的静态资源允许匿名访问
+//                .antMatchers(
+//                        "/css/**",
+//                        "/js/**",
+//                        "/images/**",
+//                        "/fonts/**",
+//                        "/favicon.ico"
+//                ).permitAll()
                 //基于配置的权限控制
                 //.antMatchers("/hasAuthority").hasAuthority("system:user:list")
-                //除上面外的所有请求 就全部需要鉴权认证
+                //除了上面的资源,其他的请求都要经过认证或者授权
                 .anyRequest().authenticated();
+
+        //开启表单认证
+        //formLogin() 适合前后端不分离项目，前后端分离项目不用。
+        //调用 /user/login 接口失败，会调用 failureHandler 对象处理，不会调用 authenticationEntryPoint 对象
+        // loginProcessingUrl() 设置的值必须和登录表单 form 中 action 的地址，不然不会调用 successHandler、failureHandler
+        // loginProcessingUrl 的作用是用来拦截前端页面对 /user/login 这个的请求的，拦截到了就走框架自己的处理流程，不会调用 /user/login 这个接口
+        // 所以这里不演示
+//        http.formLogin()
+//                .loginPage("/login.html")  //用户未登录时，访问任何资源都转跳到该路径，即登录页面
+//                .loginProcessingUrl("/user/login") //登录表单 form 中 action 的地址
+//                .usernameParameter("userName") //登录表单 form 中用户名输入框 input 的 name 值，不修改的话默认是 username
+//                .passwordParameter("password") //登录表单 form 中密码输入框 input 的 name 值，不修改的话默认是 password
+//                .successHandler(successHandler) //认证成功处理器
+//                .failureHandler(failureHandler); //认证失败处理器
+
+        //开启注销配置
+        http.logout()
+                .logoutUrl("/user/logout") //指定退出登录请求地址，默认是 GET 请求，路径为 /logout
+                .invalidateHttpSession(true) //退出时 session是否失效,默认true
+                .clearAuthentication(true) //退出时 是否清除认证信息,默认true
+                .logoutSuccessHandler(logoutSuccessHandler);
 
         // 将自定义认证过滤器 添加到过滤器链
         // addFilterBefore 的语义是添加一个 filter 到 beforeFilter 之前，

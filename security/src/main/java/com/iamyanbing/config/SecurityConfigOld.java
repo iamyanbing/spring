@@ -3,6 +3,7 @@ package com.iamyanbing.config;
 import com.iamyanbing.filter.JwtAuthenticationTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -54,6 +55,8 @@ public class SecurityConfigOld extends WebSecurityConfigurerAdapter {
 
     /**
      * 用于配置 HTTP 请求的安全处理
+     * <p>
+     * 注意：放行资源必须放在所有认证请求之前！
      *
      * @param http
      */
@@ -90,6 +93,5 @@ public class SecurityConfigOld extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(authenticationEntryPoint)
                 //配置授权异常处理器  403
                 .accessDeniedHandler(accessDeniedHandler);
-
     }
 }

@@ -1,6 +1,5 @@
 package com.iamyanbing.req;
 
-
 import lombok.Data;
 
 /**
@@ -8,10 +7,12 @@ import lombok.Data;
  */
 @Data
 public class LoginBody {
+
     /**
      * 用户名
      */
     private String userName;
+
     /**
      * 密码
      */
@@ -23,8 +24,8 @@ public class LoginBody {
     private String code;
 
     /**
-     * 唯一标识
+     * 验证码唯一标识
      */
-    private String uuid = "";
+    private String uuid;
 
 }

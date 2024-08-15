@@ -2,6 +2,7 @@ package com.iamyanbing.service.impl;
 
 import com.iamyanbing.entity.SysUser;
 import com.iamyanbing.entity.LoginUser;
+import com.iamyanbing.req.LoginBody;
 import com.iamyanbing.res.ResponseResult;
 import com.iamyanbing.service.LoginService;
 import com.iamyanbing.util.JwtUtil;
@@ -29,7 +30,6 @@ public class LoginServiceImpl implements LoginService {
      */
     @Autowired
     private AuthenticationManager authenticationManager;
-
 
     /**
      * 登录
@@ -59,7 +59,7 @@ public class LoginServiceImpl implements LoginService {
             throw new RuntimeException("登录失败");
         }
 
-        //3.如果认证通过,使用userId生成一个JWT,并将其保存到 ResponseResult 对象中返回
+        //3.如果认证通过,使用 userId 生成一个 JWT,并将其保存到 ResponseResult 对象中返回
         //3.1 获取经过身份验证的用户主体信息
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
 
@@ -112,22 +112,16 @@ public class LoginServiceImpl implements LoginService {
 
     /**
      * 带验证码的登录
-     *
-     * @param userName
-     * @param password
-     * @param code
-     * @param uuid
-     * @return: java.lang.String
      */
     @Override
-    public String login(String userName, String password, String code, String uuid) {
+    public ResponseResult loginCode(LoginBody loginBody) {
 
-        //1.redis中获取验证码
-
+        //1.redis中获取验证码，完成验证码的验证
+        // 记得删除缓存
 
         //对authentication和UserDetails进行匹配
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(userName, password));
+                new UsernamePasswordAuthenticationToken(loginBody.getUserName(), loginBody.getPassword()));
 
         //2.如果认证没有通过,给出错误提示
         if (Objects.isNull(authentication)) {
@@ -135,7 +129,6 @@ public class LoginServiceImpl implements LoginService {
         }
 
         //3.如果认证通过,使用userId生成一个JWT,并将其保存到ResponseResult中 返回
-
         //3.1 获取经过身份验证的用户主体信息
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
 
@@ -149,6 +142,10 @@ public class LoginServiceImpl implements LoginService {
         // redisCache.setCacheObject("login:" + userId, loginUser);
         //本项目用户信息就缓存在本地内存
         LoginUserContextUtil.setLoginUser(loginUser.getSysUser().getUserId(), loginUser);
-        return jwt;
+
+        //5. 封装ResponseResult,并返回
+        HashMap<String, String> map = new HashMap<>();
+        map.put("token", jwt);
+        return new ResponseResult(200, "登录成功", map);
     }
 }

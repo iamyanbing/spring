@@ -4,7 +4,6 @@ import com.iamyanbing.entity.LoginUser;
 import org.springframework.util.ObjectUtils;
 import java.util.concurrent.ConcurrentHashMap;
 
-
 /**
  * 登录成功之后把用户信息缓存到本地
  * 企业开发用Redis缓存

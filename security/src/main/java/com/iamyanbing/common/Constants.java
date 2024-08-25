@@ -5,6 +5,11 @@ public class Constants {
     /**
      * admin 用户 名称
      */
+    public static final String TOKEN = "Authorization";
+
+    /**
+     * admin 用户 名称
+     */
     public static final String ADMIN_USER_NAME = "admin";
     /**
      * test 用户 名称

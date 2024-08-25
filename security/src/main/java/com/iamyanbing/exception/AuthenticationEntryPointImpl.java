@@ -22,6 +22,8 @@ import java.io.IOException;
  * 分两种情况
  * 请求登录接口： 通过 LoginServiceImpl 类 login 方法中第一步判断用户是否认证成功。
  * 请求非登录接口： 通过 JwtAuthenticationTokenFilter 类第五步判断用户是否认证成功。
+ * <p>
+ * 与 AuthException 类区别 见 AuthException 类注释
  **/
 @Component
 @Slf4j
@@ -29,7 +31,7 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        ResponseResult result = new ResponseResult(HttpStatus.UNAUTHORIZED.value(), "认证失败请重新登录");
+        ResponseResult result = ResponseResult.fail(HttpStatus.UNAUTHORIZED.value(), "认证失败请重新登录");
         String json = JSON.toJSONString(result);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         WebUtil.renderString(response, json);

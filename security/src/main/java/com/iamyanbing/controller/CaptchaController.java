@@ -34,7 +34,7 @@ public class CaptchaController {
         map.put("uuid", uuid);
         map.put("img", specCaptcha.toBase64());
 
-        return new ResponseResult(200, "验证码获取成功", map);
+        return ResponseResult.success(map);
     }
 
 }

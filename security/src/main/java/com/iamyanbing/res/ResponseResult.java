@@ -1,50 +1,91 @@
 package com.iamyanbing.res;
 
 
+import com.iamyanbing.enums.CommonStatusEnum;
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+@Data
+@Accessors(chain = true)
 public class ResponseResult<T> {
 
     //状态码
-    private Integer code;
-
+    private int code;
 
     //提示信息
-    private String msg;
+    private String message;
 
     //封装结果数据
     private T data;
 
-    public ResponseResult(Integer code, String msg) {
-        this.code = code;
-        this.msg = msg;
+    /**
+     * 成功响应的方法
+     *
+     * @param <T>
+     * @return
+     */
+    public static <T> ResponseResult success() {
+        return new ResponseResult()
+                .setCode(CommonStatusEnum.SUCCESS.getCode())
+                .setMessage(CommonStatusEnum.SUCCESS.getMessage());
     }
 
-    public ResponseResult(Integer code, String msg, T data) {
-        this.code = code;
-        this.msg = msg;
-        this.data = data;
+    /**
+     * 成功响应的方法
+     *
+     * @param data
+     * @param <T>
+     * @return
+     */
+    public static <T> ResponseResult success(T data) {
+        return new ResponseResult()
+                .setCode(CommonStatusEnum.SUCCESS.getCode())
+                .setMessage(CommonStatusEnum.SUCCESS.getMessage())
+                .setData(data);
     }
 
-    public Integer getCode() {
-        return code;
+    /**
+     * 失败响应的方法
+     * <p>
+     * 没有指定code、message，默认返回系统异常
+     *
+     * @param data
+     * @param <T>
+     * @return
+     */
+    public static <T> ResponseResult fail(T data) {
+        return new ResponseResult()
+                .setCode(CommonStatusEnum.FAIL.getCode())
+                .setMessage(CommonStatusEnum.FAIL.getMessage())
+                .setData(data);
     }
 
-    public void setCode(Integer code) {
-        this.code = code;
+    /**
+     * 失败：自定义失败 错误码和提示信息
+     *
+     * @param code
+     * @param message
+     * @return
+     */
+    public static ResponseResult fail(int code, String message) {
+        return new ResponseResult()
+                .setCode(code)
+                .setMessage(message);
     }
 
-    public String getMsg() {
-        return msg;
+    /**
+     * 失败：自定义失败 错误码、提示信息、具体错误
+     *
+     * @param code
+     * @param message
+     * @param data
+     * @return
+     */
+    public static ResponseResult fail(int code, String message, String data) {
+        return new ResponseResult()
+                .setCode(code)
+                .setMessage(message)
+                .setData(data);
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
 }

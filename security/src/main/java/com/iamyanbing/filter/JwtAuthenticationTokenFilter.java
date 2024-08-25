@@ -1,5 +1,6 @@
 package com.iamyanbing.filter;
 
+import com.iamyanbing.common.Constants;
 import com.iamyanbing.entity.LoginUser;
 import com.iamyanbing.util.JwtUtil;
 import com.iamyanbing.util.LoginUserContextUtil;
@@ -39,7 +40,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         // 1.从请求头中获取 token
-        String token = request.getHeader("token");
+        String token = request.getHeader(Constants.ADMIN_USER_NAME);
 
         // 2.判断 token 是否为空,为空直接放行
         // 为什么为空直接放行？ 因为登录时 token 为空
@@ -54,6 +55,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             return;
         }
         // 兼容 OAuth2.0 协议
+        // JWT 标准写法 Authorization: Bearer aaa.bbb.ccc
         if (token.startsWith("Bearer ")) {
             token = token.substring("Bearer ".length());
         }

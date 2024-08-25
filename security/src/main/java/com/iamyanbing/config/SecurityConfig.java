@@ -18,16 +18,25 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
+import java.util.Arrays;
 
 /**
  * 设置 prePostEnabled = true ： 开启 Spring Security 的方法级别安全控制
  * pre 表示在方法执行前进行授权校验， post 表示在方法执行后进行授权校验
+ * 对应 @PreAuthorize 和 @PostAuthorize 注解
  * <p>
  * SpringSecurity 5.4.x以上新用法配置
  * <p>
  *
- * @EnableWebSecurity 开启Spring Security的功能 代替了 implements WebSecurityConfigurerAdapter ? 有时间了解
+ * @EnableWebSecurity 开启 Spring Security的功能 代替了 implements WebSecurityConfigurerAdapter ?
+ * 见云笔记 《103.EnableWebSecurity》
  */
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Configuration
@@ -50,6 +59,9 @@ public class SecurityConfig {
 
     @Autowired
     private LogoutSuccessHandler logoutSuccessHandler;
+
+    @Autowired
+    private CorsFilter corsFilter;
 
     /**
      * BCryptPasswordEncoder注入到Spring容器
@@ -91,15 +103,18 @@ public class SecurityConfig {
         //关闭csrf
         http.csrf().disable();
         //允许跨域
-        http.cors();
+//        http.cors();
+//        http.cors().configurationSource(corsConfigurationSource());
 
-        // 主要是通过访问 /login.html 查看验证码效果
         http.
-                sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)//不会去创建会话,每个请求都被视为独立的请求,STATELESS表示无状态
+                //不会去创建会话,每个请求都被视为独立的请求,STATELESS表示无状态
+                //基于token，所以不需要 session
+                        sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 //定义请求授权规则
                 .authorizeHttpRequests()
-                //对登录接口、获取验证码接口，允许匿名访问
+                //对登录接口、登录页面、获取验证码接口，允许匿名访问
+                //主要是通过访问 /login.html 查看验证码效果，不去实际登录
                 .antMatchers("/user/login", "/code/image", "/captchaImage", "/login.html").permitAll()
                 // 所有的静态资源允许匿名访问
 //                .antMatchers(
@@ -149,7 +164,27 @@ public class SecurityConfig {
                 //配置授权异常处理器  403
                 .accessDeniedHandler(accessDeniedHandler);
 
+        //添加 CORS filter
+        http.addFilterBefore(corsFilter, JwtAuthenticationTokenFilter.class);
+        //确保在用户注销时,响应头中依然包含跨域的字段
+        http.addFilterBefore(corsFilter, LogoutFilter.class);
+
         return http.build();
+    }
+
+    public CorsConfigurationSource corsConfigurationSource(){
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.addAllowedOriginPattern("*");
+        corsConfiguration.addAllowedHeader("*");
+        corsConfiguration.addAllowedMethod("*");
+        corsConfiguration.setAllowCredentials(true);
+//        corsConfiguration.setAllowedOrigins(Arrays.asList("*"));
+//        corsConfiguration.setAllowedMethods(Arrays.asList("*"));
+//        corsConfiguration.setAllowedHeaders(Arrays.asList("*"));
+
+        UrlBasedCorsConfigurationSource ub = new UrlBasedCorsConfigurationSource();
+        ub.registerCorsConfiguration("/**", corsConfiguration);
+        return ub;
     }
 
     public static void main(String[] args) {

@@ -1,8 +1,13 @@
 package com.iamyanbing.service.impl;
 
+import com.iamyanbing.enums.CommonStatusEnum;
 import com.iamyanbing.common.Constants;
 import com.iamyanbing.entity.LoginUser;
 import com.iamyanbing.entity.SysUser;
+import com.iamyanbing.enums.UserStatusEnum;
+import com.iamyanbing.exception.AuthException;
+import com.iamyanbing.exception.CustomException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,6 +28,7 @@ import java.util.Objects;
  * 普通用户可以是任意登录账号
  */
 @Service
+@Slf4j
 public class UserDetailsServiceImpl implements UserDetailsService {
 
 
@@ -40,7 +46,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         //查询用户信息
         SysUser sysUser = obtainSysUser(username);
         if (Objects.isNull(sysUser)) {
-            throw new RuntimeException("用户名或密码错误");
+            log.info("没有从数据库获取到用户信息，用户名：{}", username);
+            // 为什么这里返回给前端不是 用户名不存在？ 而是 用户不存在或者密码错误？
+            // 防止 盗取 用户名
+            throw new AuthException(CommonStatusEnum.USERNAME_PASSWORD.getCode(),
+                    CommonStatusEnum.USERNAME_PASSWORD.getMessage());
+        }
+
+        if (UserStatusEnum.DISABLE.getCode() == sysUser.getStatus()) {
+            log.info("用户名: {} 已被停用", username);
+            throw new CustomException(CommonStatusEnum.USER_DISABLE.getCode(),
+                    CommonStatusEnum.USER_DISABLE.getMessage());
+        }
+
+        if (UserStatusEnum.CANCEL.getCode() == sysUser.getStatus()) {
+            log.info("用户名: {} 已经注销", username);
+            throw new CustomException(CommonStatusEnum.USER_CANCEL.getCode(),
+                    CommonStatusEnum.USER_CANCEL.getMessage());
         }
 
         //查询用户权限信息

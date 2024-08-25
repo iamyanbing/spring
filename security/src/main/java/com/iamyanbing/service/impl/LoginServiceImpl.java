@@ -1,16 +1,21 @@
 package com.iamyanbing.service.impl;
 
+import com.iamyanbing.enums.CommonStatusEnum;
 import com.iamyanbing.entity.SysUser;
 import com.iamyanbing.entity.LoginUser;
+import com.iamyanbing.exception.AuthException;
 import com.iamyanbing.req.LoginBody;
 import com.iamyanbing.res.ResponseResult;
 import com.iamyanbing.service.LoginService;
 import com.iamyanbing.util.JwtUtil;
 import com.iamyanbing.util.LoginUserContextUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +28,7 @@ import java.util.Objects;
  * @date 2023/4/25
  **/
 @Service
+@Slf4j
 public class LoginServiceImpl implements LoginService {
 
     /**
@@ -45,6 +51,7 @@ public class LoginServiceImpl implements LoginService {
         // authenticationToken 就是我们创建出来的未认证的 Authentication 对象
         Authentication authenticationToken = new UsernamePasswordAuthenticationToken(sysUser.getUserName(), sysUser.getPassword());
 
+        //2.如果认证没有通过,给出错误提示
         // 认证由 authenticationManager.authenticate() 帮我们完成。
         // 对未认证的 Authentication 和 UserDetails 进行匹配。
         // UserDetails 通过 UserDetailsServiceImpl 类获取,
@@ -52,11 +59,14 @@ public class LoginServiceImpl implements LoginService {
         // authenticate 方法：将一个未认证的 Authentication 对象传入，返回一个认证完成的 Authentication
         // 如果认证失败，直接抛异常：AuthenticationException
         // AuthenticationEntryPointImpl 会捕获 AuthenticationException
-        Authentication authentication = authenticationManager.authenticate(authenticationToken);
-
-        //2.如果认证没有通过,给出错误提示
-        if (Objects.isNull(authentication)) {
-            throw new RuntimeException("登录失败");
+        Authentication authentication;
+        try {
+            authentication = authenticationManager.authenticate(authenticationToken);
+        } catch (AuthenticationException exception) {
+            log.error("登录失败", exception);
+            // 由全局异常捕获
+            throw new AuthException(CommonStatusEnum.USERNAME_PASSWORD.getCode(),
+                    CommonStatusEnum.USERNAME_PASSWORD.getMessage());
         }
 
         //3.如果认证通过,使用 userId 生成一个 JWT,并将其保存到 ResponseResult 对象中返回
@@ -78,7 +88,7 @@ public class LoginServiceImpl implements LoginService {
         HashMap<String, String> map = new HashMap<>();
         map.put("token", jwt);
 
-        return new ResponseResult(200, "登录成功", map);
+        return ResponseResult.success(map);
     }
 
     /**
@@ -94,6 +104,7 @@ public class LoginServiceImpl implements LoginService {
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
 
         if (Objects.isNull(authenticationToken)) {
+            // 交给 AuthenticationEntryPointImpl 类处理
             throw new RuntimeException("获取用户认证信息失败!");
         }
 
@@ -107,7 +118,7 @@ public class LoginServiceImpl implements LoginService {
 
         //2：清理上下文对象，释放内存空间
         SecurityContextHolder.clearContext();
-        return new ResponseResult(200, "退出登录成功!");
+        return ResponseResult.success();
     }
 
     /**
@@ -118,14 +129,21 @@ public class LoginServiceImpl implements LoginService {
 
         //1.redis中获取验证码，完成验证码的验证
         // 记得删除缓存
-
-        //对authentication和UserDetails进行匹配
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginBody.getUserName(), loginBody.getPassword()));
+        if (StringUtils.isBlank(loginBody.getCode())){
+            throw new AuthException(CommonStatusEnum.CAPTCHA.getCode(),
+                    CommonStatusEnum.CAPTCHA.getMessage());
+        }
 
         //2.如果认证没有通过,给出错误提示
-        if (Objects.isNull(authentication)) {
-            throw new RuntimeException("登录失败");
+        //对authentication和UserDetails进行匹配
+        Authentication authentication;
+        try {
+            authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginBody.getUserName(), loginBody.getPassword()));
+        } catch (AuthenticationException exception) {
+            log.error("登录失败", exception);
+            throw new AuthException(CommonStatusEnum.USERNAME_PASSWORD.getCode(),
+                    CommonStatusEnum.USERNAME_PASSWORD.getMessage());
         }
 
         //3.如果认证通过,使用userId生成一个JWT,并将其保存到ResponseResult中 返回
@@ -146,6 +164,6 @@ public class LoginServiceImpl implements LoginService {
         //5. 封装ResponseResult,并返回
         HashMap<String, String> map = new HashMap<>();
         map.put("token", jwt);
-        return new ResponseResult(200, "登录成功", map);
+        return ResponseResult.success(map);
     }
 }

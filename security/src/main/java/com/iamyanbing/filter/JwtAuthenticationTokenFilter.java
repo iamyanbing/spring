@@ -2,6 +2,8 @@ package com.iamyanbing.filter;
 
 import com.iamyanbing.common.Constants;
 import com.iamyanbing.entity.LoginUser;
+import com.iamyanbing.enums.CommonStatusEnum;
+import com.iamyanbing.exception.AuthException;
 import com.iamyanbing.util.JwtUtil;
 import com.iamyanbing.util.LoginUserContextUtil;
 import io.jsonwebtoken.Claims;
@@ -40,13 +42,13 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         // 1.从请求头中获取 token
-        String token = request.getHeader(Constants.ADMIN_USER_NAME);
+        String token = request.getHeader(Constants.TOKEN);
 
         // 2.判断 token 是否为空,为空直接放行
         // 为什么为空直接放行？ 因为登录时 token 为空
         if (!StringUtils.hasText(token)) {
             //所有 token 为空都放行，会不会存在问题？  答案：不会
-            //在 SecurityConfig 类 configure 方法中已经配置好了登录接口，
+            //在 SecurityConfig 类 securityFilterChain 方法中已经配置好了登录接口.(antMatchers)
             //只要不是配置的登录接口，放行之后都会通过 AuthenticationEntryPointImpl 类，给客户端响应 401
             //框架怎么判断是否认证成功？ 见第五步
             filterChain.doFilter(request, response);
@@ -68,7 +70,12 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             userId = (String) claims.get("userId");
         } catch (Exception e) {
             log.error("解析token异常", e);
-            throw new RuntimeException("非法token");
+            // Filter 中抛出的异常，GlobalExceptionHandler、AccessDeniedHandlerImpl、AuthenticationEntryPointImpl 不捕获
+            // 所以异常交给 ExceptionController 类 handleAuthException 方法处理
+            request.setAttribute("authException", new AuthException(CommonStatusEnum.USER_TOKEN.getCode(),
+                    CommonStatusEnum.USER_TOKEN.getMessage()));
+            request.getRequestDispatcher(Constants.AUTH_EXCRPTION_PATH).forward(request, response);
+            return;
         }
 
         // 4.从redis中获取用户信息，除了用户名等信息之外，还包括用户角色信息、用户权限信息
@@ -78,7 +85,12 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         // 本项目直接从本地缓存中获取 用户信息
         LoginUser loginUser = LoginUserContextUtil.getLoginUser(Long.parseLong(userId));
         if (Objects.isNull(loginUser)) {
-            throw new RuntimeException("用户未登录");
+            // Filter 中抛出的异常，GlobalExceptionHandler、AccessDeniedHandlerImpl、AuthenticationEntryPointImpl 不捕获
+            // 所以异常交给 ExceptionController 类 handleAuthException 方法处理
+            request.setAttribute("authException", new AuthException(CommonStatusEnum.USER_LOGIN.getCode(),
+                    CommonStatusEnum.USER_LOGIN.getMessage()));
+            request.getRequestDispatcher(Constants.AUTH_EXCRPTION_PATH).forward(request, response);
+            return;
         }
 
         // 5.将用户信息保存至 SecurityContextHolder,方便后续的访问控制和授权操作

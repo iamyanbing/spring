@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
  * 全局异常处理器
+ * 注意： Filter 中抛出的异常，这里不捕获
  **/
 @RestControllerAdvice
 @Slf4j

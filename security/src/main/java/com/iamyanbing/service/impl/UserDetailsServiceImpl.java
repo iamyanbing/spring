@@ -66,12 +66,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
 
         //查询用户权限信息
+        //sys_menu 表 perms 字段
         List<String> perms = obtainPerms(sysUser.getUserId());
 
         //查询用户角色信息
+        //sys_role 表 role_key 字段
         List<String> roles = obtainRoles(sysUser.getUserId());
 
-        //方法的返回值是UserDetails类型,需要返回自定义的实现类,并且将user信息通过构造方法传入
+        //方法的返回值是 UserDetails 类型,需要返回自定义的实现类,并且将user信息通过构造方法传入
         return new LoginUser(sysUser, perms, roles);
     }
 
@@ -129,16 +131,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             sysUser.setUserName(username);
             sysUser.setNickName("超级权限用户");
             sysUser.setPassword("$2a$10$wgIvBFsrp5i0RjN2BKKSeOXeSItoPN8.VgHrzQVnNGjEeofa7Trq6");
+            sysUser.setStatus(UserStatusEnum.OK.getCode());
         } else if (StringUtils.equals(username, Constants.TEST_USER_NAME)) {
             sysUser.setUserId(Constants.TEST_USER_ID);
             sysUser.setUserName(username);
             sysUser.setNickName("测试用户");
             sysUser.setPassword("$2a$10$zsx2Kaa3qjKFZwrep3JT4exmKJib9BzesGE2JFVod3coodo2cTgVC");
+            sysUser.setStatus(UserStatusEnum.OK.getCode());
         } else {
             sysUser.setUserId(Constants.COMMON_USER_ID);
             sysUser.setUserName(username);
             sysUser.setNickName("普通用户");
             sysUser.setPassword("$2a$10$qmUAfwgV5Q8Xo/L1EIkSWOVodJ3ukElbS2/GFkrgpQZJpzV8Xo04u");
+            sysUser.setStatus(UserStatusEnum.OK.getCode());
         }
 
         // 明文密码使用方式，前面加 {noop}

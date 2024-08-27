@@ -13,6 +13,10 @@ public enum CommonStatusEnum {
     USER_DISABLE(4002, "对不起,您的账号已被停用"),
     USER_CANCEL(4002, "对不起,您的账号已注销"),
 
+    USER_TOKEN(4003, "对不起,您的 token 非法"),
+
+    USER_LOGIN(4004, "对不起,您的登录已经失效"),
+
 
     /**
      * message ： 操作失败

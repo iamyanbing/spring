@@ -64,7 +64,7 @@ public class LoginServiceImpl implements LoginService {
             authentication = authenticationManager.authenticate(authenticationToken);
         } catch (AuthenticationException exception) {
             log.error("登录失败", exception);
-            // 由全局异常捕获
+            // 由全局异常捕获。异常不再由 AuthenticationEntryPointImpl 捕获。
             throw new AuthException(CommonStatusEnum.USERNAME_PASSWORD.getCode(),
                     CommonStatusEnum.USERNAME_PASSWORD.getMessage());
         }

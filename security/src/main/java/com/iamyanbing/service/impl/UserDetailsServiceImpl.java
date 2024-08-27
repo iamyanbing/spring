@@ -120,6 +120,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     /**
      * 根据 用户名 查询用户信息
      * 实际数据从mysql获取
+     * <p>
+     * 密码生成见 SecurityConfig 类 mian 方法
      *
      * @param username
      * @return

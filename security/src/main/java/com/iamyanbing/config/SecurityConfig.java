@@ -25,8 +25,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import java.util.Arrays;
-
 /**
  * 设置 prePostEnabled = true ： 开启 Spring Security 的方法级别安全控制
  * pre 表示在方法执行前进行授权校验， post 表示在方法执行后进行授权校验

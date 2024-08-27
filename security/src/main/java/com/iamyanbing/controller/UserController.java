@@ -4,6 +4,7 @@ import com.iamyanbing.entity.LoginUser;
 import com.iamyanbing.entity.SysMenu;
 import com.iamyanbing.res.ResponseResult;
 import com.iamyanbing.res.RouterVO;
+import com.iamyanbing.res.TreeSelectVO;
 import com.iamyanbing.service.SysMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestController
 public class UserController {
@@ -43,6 +45,9 @@ public class UserController {
         List<SysMenu> menus = service.selectMenuTreeByUserId(userId);
         //将获取到的菜单列表转换为 前端需要的路由列表
         List<RouterVO> routerVoList = service.buildMenus(menus);
+
+        // 菜单 树结构，属性简化，只响应 id、name
+        List<TreeSelectVO> treeSelectVOS = menus.stream().map(TreeSelectVO::new).collect(Collectors.toList());
 
         return ResponseResult.success(routerVoList);
     }

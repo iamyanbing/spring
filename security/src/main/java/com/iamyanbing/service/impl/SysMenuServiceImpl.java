@@ -27,7 +27,10 @@ public class SysMenuServiceImpl implements SysMenuService {
             menus = obtainMenuByUserId(userId);
         }
 
-        // 封装子菜单
+        // 封装子菜单。方式一：未知 parentId
+        getChildPerms(menus);
+
+        // 封装子菜单。方式二：已知 parentId
         return getChildPerms(menus, 0);
     }
 
@@ -115,6 +118,39 @@ public class SysMenuServiceImpl implements SysMenuService {
         String routerPath = menu.getPath();
         String routerName = StringUtils.capitalize(routerPath);
         return routerName;
+    }
+
+    public List<SysMenu> getChildPerms(List<SysMenu> menus) {
+        List<SysMenu> returnList = new ArrayList<>();
+
+        //获取所有菜单id
+        List<Long> menuIds = menus.stream().map(SysMenu::getMenuId).collect(Collectors.toList());
+
+        menus.forEach(menu -> {
+            //如果是顶级节点,遍历该父节点下的所有子节点
+            if (!menuIds.contains(menu.getParentId())) {
+                recursionFn(menus, menu);
+                returnList.add(menu);
+            }
+        });
+
+        // 下面是方法二
+        //获取所有菜单id
+//        List<Long> menuIdss = new ArrayList<>();
+//        for (SysMenu sysMenu : menus) {
+//            menuIdss.add(sysMenu.getMenuId());
+//        }
+//
+//        menus.stream()
+//                .filter(menu -> !menuIdss.contains(menu.getParentId()))
+//                .forEach(menu -> {
+//                    //递归获取子节点
+//                    recursionFn(menus, menu);
+//                    returnList.add(menu);
+//                });
+
+
+        return returnList;
     }
 
     /**

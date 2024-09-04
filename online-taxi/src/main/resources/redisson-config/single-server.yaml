@@ -1,0 +1,6 @@
+# 配置根据 RedisConfig 类 redissonClient 方法代码而来，
+# Config 类 singleServerConfig 属性
+# SingleServerConfig 类 address、database 属性
+singleServerConfig:
+  address: "redis://localhost:6379"
+  database: 1

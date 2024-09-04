@@ -14,6 +14,7 @@
         <module>serverpush</module>
         <module>stomp</module>
         <module>security</module>
+        <module>online-taxi</module>
     </modules>
 
 </project>

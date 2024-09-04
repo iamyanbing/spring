@@ -1,0 +1,10 @@
+# 配置根据 RedisConfig 类 redissonClient 方法代码而来，
+# config.useSingleServer() 修改为 config.useSentinelServers()
+# Config 类 sentinelServersConfig 属性
+# SentinelServersConfig 类 sentinelAddresses、masterName 属性
+sentinelServersConfig:
+  sentinelAddresses:
+    - "redis://localhost:26379"
+    - "redis://localhost:26380"
+    - "redis://localhost:26381"
+  masterName: mymaster

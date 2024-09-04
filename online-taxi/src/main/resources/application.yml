@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: online-taxi
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0
+
+zookeeper:
+  # 单机
+  address: 192.168.1.2:2181
+  # 集群
+#  address: 192.168.1.2:2181,192.168.1.2:2182,192.168.1.2:2183
+  timeout: 100000
+
+seata:
+  service:
+    vgroup-mapping.my_tx: seata-tc
+    # 集群。多个协调者，生产环境都是集群
+    #    grouplist.seata-tc: 127.0.0.1:8091;127.0.0.1:8092;127.0.0.1:8093
+    # 单机。一个协调者，开发或者测试环境 基本上的都是单机
+    grouplist.seata-tc: 127.0.0.1:8091
+  tx-service-group: my_tx
+
+server:
+  port: 8007
+  servlet:
+    context-path: /taxi

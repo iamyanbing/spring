@@ -1,0 +1,12 @@
+# 配置根据 RedisConfig 类 redissonClient 方法代码而来，
+# config.useSingleServer() 修改为 config.useClusterServers()
+# Config 类 clusterServersConfig 属性
+# ClusterServersConfig 类 nodeAddresses 属性
+clusterServersConfig:
+  nodeAddresses:
+    - "redis://192.168.1.2:30001"
+    - "redis://192.168.1.2:30002"
+    - "redis://192.168.1.2:30003"
+    - "redis://192.168.1.2:30004"
+    - "redis://192.168.1.2:30005"
+    - "redis://192.168.1.2:30006"

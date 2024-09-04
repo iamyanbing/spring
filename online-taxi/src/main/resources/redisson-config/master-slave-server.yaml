@@ -1,0 +1,9 @@
+# 配置根据 RedisConfig 类 redissonClient 方法代码而来，
+# config.useSingleServer() 修改为 config.useMasterSlaveServers()
+# Config 类 masterSlaveServersConfig 属性
+# MasterSlaveServersConfig 类 masterAddress、slaveAddresses 属性
+masterSlaveServersConfig:
+  masterAddress: "redis://localhost:6379"
+  slaveAddresses:
+    - "redis://localhost:6380"
+    - "redis://localhost:6381"

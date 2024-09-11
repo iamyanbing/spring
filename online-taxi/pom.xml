@@ -94,6 +94,34 @@
             <version>2023.0.1.2</version>
         </dependency>
 
+        <!-- ================================================= -->
+        <!-- nacos discovery -->
+        <!-- ================================================= -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+            <version>2021.1</version>
+        </dependency>
+
+        <!-- ================================================= -->
+        <!-- loadbalancer -->
+        <!-- ================================================= -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+
+
+        <!-- ================================================= -->
+        <!-- jasypt： 配置中心加解密使用,见 EncryptDecryptUtil 类 -->
+        <!-- ================================================= -->
+        <dependency>
+            <groupId>com.github.ulisesbocchio</groupId>
+            <artifactId>jasypt-spring-boot-starter</artifactId>
+            <version>3.0.3</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -102,6 +130,20 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <!-- 下面代码在生产环境打包时用。IDEA 打包可以不用下面代码 -->
+                <configuration>
+                    <mainClass>com.iamyanbing.OnlineTaxiApplication</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <!-- 把 online-taxi 依赖的其他包也打进jar包-->
+                            <!-- 依赖的其他包，比如common、util等。这些包都是我们自己写的，并不是依赖的三方包-->
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <!-- 上面代码在生产环境打包时用。IDEA 打包可以不用下面代码 -->
             </plugin>
         </plugins>
     </build>

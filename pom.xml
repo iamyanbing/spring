@@ -15,6 +15,7 @@
         <module>stomp</module>
         <module>security</module>
         <module>online-taxi</module>
+        <module>cloud-gateway</module>
     </modules>
 
 </project>

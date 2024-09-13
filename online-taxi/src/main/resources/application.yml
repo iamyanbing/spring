@@ -1,3 +1,8 @@
+server:
+  port: 9995
+  servlet:
+    context-path: /taxi
+
 spring:
   application:
     name: online-taxi
@@ -21,8 +26,3 @@ seata:
     # 单机。一个协调者，开发或者测试环境 基本上的都是单机
     grouplist.seata-tc: 127.0.0.1:8091
   tx-service-group: my_tx
-
-server:
-  port: 8007
-  servlet:
-    context-path: /taxi

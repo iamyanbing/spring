@@ -1,6 +1,6 @@
 server:
   #服务器的HTTP端口
-  port: 8080
+  port: 9996
 
 # 前后端不分离，所以下面不用
 #ThymeleafAutoConfiguration 类通过 @EnableConfigurationProperties 注入 ThymeleafProperties.class

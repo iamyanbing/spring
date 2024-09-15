@@ -24,7 +24,7 @@ public class VerificationCodeUtil {
     }
 
     /**
-     * @param size 指定验证码包含的字母个数
+     * @param size 指定验证码包含的数字个数
      */
     public static void obtainByMath(int size) {
         // 生成验证码

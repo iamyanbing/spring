@@ -4,6 +4,9 @@ server:
 spring:
   application:
     name: cloud-gateway
+  redis:
+    host: localhost
+    port: 6379
   cloud:
     gateway:
       # 路由集合（数组）：指当请求满足什么样的断言时，转发到哪个服务上
@@ -23,6 +26,14 @@ spring:
             # 不配置 StripPrefix=1，boot 服务接收到的请求：http://localhost:9999/boot/hello/yanbing
             # 配置 StripPrefix=1，boot 服务接收到的请求：http://localhost:9999/hello/yanbing
             - StripPrefix=1
+            - name: RequestRateLimiter
+              args:
+                # 限流维度的实现类
+                key-resolver: '#{@rateComponet}'
+                # 指定了每秒钟生成的令牌数（令牌桶算法）
+                redis-rate-limiter.replenishRate: 1
+                # 指定了令牌桶的容量（令牌桶算法）
+                redis-rate-limiter.burstCapacity: 3
 
         - id: security
           uri: http://localhost:9996
@@ -37,6 +48,8 @@ spring:
 # 配置不需要认证的路径
 path-interceptor:
   excludePathPatterns:
-    - /a
     - /boot/users/**
+    - /security/user/login
+    - /security/code/image
+    - /security/captchaImage
 
